@@ -22,7 +22,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
 	pb "../config"
@@ -33,6 +32,29 @@ import (
 const (
 	address     = "localhost:50051"
 	defaultName = "world"
+	text        = `[ 
+		{
+			"name":"Pablo Mendoza",
+			"location":"Guatemala City",
+			"age":35,
+			"infected_type":"communitary",
+			"state": "asymptomatic"
+		},
+		{
+			"name":"Maria Hernandez",
+			"location":"Peten",
+			"age":15,
+			"infected_type":"communitary",
+			"state": "asymptomatic"
+		},
+		{
+			"name":"Roberto Torres",
+			"location":"Escuintla",
+			"age":27,
+			"infected_type":"communitary",
+			"state": "asymptomatic"
+		}
+	]`
 )
 
 func main() {
@@ -45,15 +67,12 @@ func main() {
 	c := pb.NewServicioClient(conn)
 
 	// Contact the server and print out its response.
-	name := defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
+	data := text
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.SendData(ctx, &pb.DataRequest{Name: name})
+	r, err := c.SendData(ctx, &pb.DataRequest{Data: data})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not send: %v", err)
 	}
 	log.Printf("Respuesta: %s", r.GetMessage())
 }

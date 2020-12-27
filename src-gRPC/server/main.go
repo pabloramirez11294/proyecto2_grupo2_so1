@@ -39,8 +39,8 @@ type server struct {
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) SendData(ctx context.Context, in *pb.DataRequest) (*pb.DataReply, error) {
-	log.Printf("Recibido: %v", in.GetName())
-	return &pb.DataReply{Message: "Hola " + in.GetName()}, nil
+	log.Printf("Recibido: %v", in.GetData())
+	return &pb.DataReply{Message: "Data recibida."}, nil
 }
 
 func main() {

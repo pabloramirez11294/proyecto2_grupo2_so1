@@ -26,7 +26,7 @@ service Servicio {
 
 // The request message containing the user's name.
 message DataRequest {
-  string name = 1;
+  string data = 1;
 }
 
 // The response message containing the greetings
