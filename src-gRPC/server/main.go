@@ -1,30 +1,17 @@
-/*
- *
- * Copyright 2015 gRPC authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
-// Package main implements a server for Greeter service.
 package main
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net"
+	"time"
 
-	pb "../config"
+	pb "config"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
 )
 
@@ -40,6 +27,10 @@ type server struct {
 // SayHello implements helloworld.GreeterServer
 func (s *server) SendData(ctx context.Context, in *pb.DataRequest) (*pb.DataReply, error) {
 	log.Printf("Recibido: %v", in.GetData())
+
+	//base de datos mongo
+	baseDatos(in.GetData())
+
 	return &pb.DataReply{Message: "Data recibida."}, nil
 }
 
@@ -53,4 +44,63 @@ func main() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+}
+
+func baseDatos(text string) {
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://sopes1user:sopes1pass@cluster0.oqfrs.mongodb.net/bd-sopes1-proy2?retryWrites=true&w=majority"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(ctx)
+
+	database := client.Database("bd-sopes1-proy2")
+	//dataCollection := database.Collection("data")
+
+	/*test1 := map[string]interface{}{
+		"value1": "test 1",
+		"value2": "MyValue{}",
+		"value3": "MyOtherValue{}",
+	}*/
+	type Person struct {
+		Name         string
+		Location     string
+		Age          int
+		InfectedType string
+		State        string
+	}
+	dataJSON := text
+	var persons []Person
+	json.Unmarshal([]byte(dataJSON), &persons)
+	fmt.Print(persons)
+
+	var ui []interface{}
+	for _, t := range persons {
+		ui = append(ui, t)
+	}
+
+	res, err := database.Collection("data").InsertMany(ctx, ui)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Inserted %v documents into data collection!\n", res)
+
+	/*x := []string{"a", "b", "c", "d"}
+	datos := map[string]interface{}{
+		"val1": x[0],
+		"val2": x[1],
+		"val3": x[2],
+	}
+
+	fmt.Print(datos, "\n")
+	fmt.Print(test1, "\n")*/
+
+	//Species: pigeon, Description: likes to perch on rocks
+
 }
