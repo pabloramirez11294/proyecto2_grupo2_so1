@@ -60,19 +60,13 @@ func baseDatos(text string) {
 	defer client.Disconnect(ctx)
 
 	database := client.Database("bd-sopes1-proy2")
-	//dataCollection := database.Collection("data")
 
-	/*test1 := map[string]interface{}{
-		"value1": "test 1",
-		"value2": "MyValue{}",
-		"value3": "MyOtherValue{}",
-	}*/
 	type Person struct {
-		Name         string
-		Location     string
-		Age          int
-		InfectedType string
-		State        string
+		Name          string
+		Location      string
+		Age           int
+		Infected_type string
+		State         string
 	}
 	dataJSON := text
 	var persons []Person
@@ -90,17 +84,5 @@ func baseDatos(text string) {
 		log.Fatal(err)
 	}
 	fmt.Printf("Inserted %v documents into data collection!\n", res)
-
-	/*x := []string{"a", "b", "c", "d"}
-	datos := map[string]interface{}{
-		"val1": x[0],
-		"val2": x[1],
-		"val3": x[2],
-	}
-
-	fmt.Print(datos, "\n")
-	fmt.Print(test1, "\n")*/
-
-	//Species: pigeon, Description: likes to perch on rocks
 
 }
