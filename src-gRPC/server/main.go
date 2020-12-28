@@ -29,7 +29,7 @@ func (s *server) SendData(ctx context.Context, in *pb.DataRequest) (*pb.DataRepl
 	log.Printf("Recibido: %v", in.GetData())
 
 	//base de datos mongo
-	baseDatos(in.GetData())
+	go baseDatos(in.GetData())
 
 	return &pb.DataReply{Message: "Data recibida."}, nil
 }
