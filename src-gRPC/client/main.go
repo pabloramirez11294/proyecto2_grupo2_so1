@@ -1,44 +1,51 @@
 package main
 
 import (
+	pb "config"
 	"context"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"time"
 
-	pb "config"
-
+	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )
 
-const (
-	address     = "localhost:50051"
-	defaultName = "world"
-	text        = `[ 
-		{
-			"name":"Pablo Mendoza",
-			"location":"Guatemala City",
-			"age":35,
-			"infected_type":"communitary",
-			"state": "asymptomatic"
-		},
-		{
-			"name":"Maria Hernandez",
-			"location":"Peten",
-			"age":15,
-			"infected_type":"communitary",
-			"state": "asymptomatic"
-		},
-		{
-			"name":"Roberto Torres",
-			"location":"Escuintla",
-			"age":27,
-			"infected_type":"communitary",
-			"state": "asymptomatic"
-		}
-	]`
-)
+const address = "localhost:50051"
 
 func main() {
+	// API
+	router := mux.NewRouter().StrictSlash(true)
+
+	router.HandleFunc("/", indexRoute)
+	router.HandleFunc("/data", postData).Methods("POST")
+
+	log.Fatal(http.ListenAndServe(":3000", router))
+
+}
+
+func postData(w http.ResponseWriter, r *http.Request) {
+	// Read data
+	reqBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Fprintf(w, "Insert a Valid Data")
+	}
+
+	go sendData(string(reqBody))
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w)
+}
+
+func indexRoute(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Wecome the my GO API!")
+}
+
+func sendData(data string) {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -48,7 +55,6 @@ func main() {
 	c := pb.NewServicioClient(conn)
 
 	// Contact the server and print out its response.
-	data := text
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := c.SendData(ctx, &pb.DataRequest{Data: data})
@@ -56,5 +62,4 @@ func main() {
 		log.Fatalf("could not send: %v", err)
 	}
 	log.Printf("Respuesta: %s", r.GetMessage())
-
 }
