@@ -78,7 +78,7 @@ func baseDatos(text string) {
 		ui = append(ui, t)
 	}
 
-	res, err := database.Collection("data").InsertMany(ctx, ui)
+	res, err := database.Collection("infectados").InsertMany(ctx, ui)
 
 	if err != nil {
 
