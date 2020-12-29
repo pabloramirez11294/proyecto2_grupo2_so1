@@ -26,7 +26,7 @@ type server struct {
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) SendData(ctx context.Context, in *pb.DataRequest) (*pb.DataReply, error) {
-	log.Printf("Recibido: %v", in.GetData())
+	log.Print("Recibido")
 
 	//base de datos mongo
 	go baseDatos(in.GetData())
@@ -71,8 +71,8 @@ func baseDatos(text string) {
 	dataJSON := text
 	var persons []Person
 	json.Unmarshal([]byte(dataJSON), &persons)
-	fmt.Print(persons)
 
+	//convertir a []interface
 	var ui []interface{}
 	for _, t := range persons {
 		ui = append(ui, t)
@@ -81,7 +81,8 @@ func baseDatos(text string) {
 	res, err := database.Collection("data").InsertMany(ctx, ui)
 
 	if err != nil {
-		log.Fatal(err)
+
+		log.Print(err)
 	}
 	fmt.Printf("Inserted %v documents into data collection!\n", res)
 
