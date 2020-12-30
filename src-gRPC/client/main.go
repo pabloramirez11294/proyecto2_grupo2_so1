@@ -3,7 +3,6 @@ package main
 import (
 	pb "config"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -38,7 +37,7 @@ func postData(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w)
+	fmt.Fprintf(w, `{"message" : "Recibido!"}`)
 }
 
 func indexRoute(w http.ResponseWriter, r *http.Request) {
