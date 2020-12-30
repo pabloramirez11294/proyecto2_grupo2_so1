@@ -33,7 +33,7 @@ func postData(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "Insert a Valid Data")
 	}
-
+	log.Print(string(reqBody))
 	go sendData(string(reqBody))
 
 	w.Header().Set("Content-Type", "application/json")
