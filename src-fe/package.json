@@ -1,0 +1,24 @@
+{
+  "name": "proyecto2_fe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.19.0",
+    "datatables.net": "^1.10.23",
+    "datatables.net-dt": "^1.10.23",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.9",
+    "node-fetch": "^2.6.1",
+    "socket.io": "^3.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
