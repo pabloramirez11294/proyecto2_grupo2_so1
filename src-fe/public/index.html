@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Proyecto 2 - Grupo 2</title>
+        <script src="/socket.io/socket.io.js"></script>     
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+        <script src="main.js"></script>
+    </head>
+    <body>
+        <h1>Mi aplicacion</h1>
+        <button id="b_regrescar" onclick="refrescar()">Refrescar</button>
+        <table id="table_id" class="display">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Age</th>
+                    <th>Infected Type</th>
+                    <th>State</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </body>
+</html>
+
+
