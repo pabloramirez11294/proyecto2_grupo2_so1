@@ -21,7 +21,7 @@ func main() {
 	} else {
 		log.Println("Everything is fine!!!")
 	}
-	// defer c.Close()
+	defer c.Close()
 
 	// Subscriber
 	psc := redis.PubSubConn{Conn: c}
@@ -73,13 +73,14 @@ func baseDatos(text string) {
 	for _, t := range persons {
 		ui = append(ui, t)
 	}
-
-	res, err := database.Collection("infectados").InsertMany(ctx, ui)
+	database.Collection("infectados").InsertMany(ctx, ui)
+	fmt.Print("Inserted documents into data collection!\n")
+	/*res, err := database.Collection("infectados").InsertMany(ctx, ui)
 
 	if err != nil {
 
 		log.Print(err)
 	}
-	fmt.Printf("Inserted %v documents into data collection!\n", res)
+	fmt.Printf("Inserted %v documents into data collection!\n", res)*/
 
 }
