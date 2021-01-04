@@ -8,8 +8,6 @@ import (
 )
 
 func main() {
-	//https://godoc.org/github.com/gomodule/redigo/redis#Pool
-	fmt.Println("Hello World")
 
 	c, err := redis.Dial("tcp", "35.226.134.234:6379")
 	if err != nil {
@@ -20,9 +18,9 @@ func main() {
 	}
 	// defer c.Close()
 
-	/// This code is for Subscriber
+	// Subscriber
 	psc := redis.PubSubConn{Conn: c}
-	psc.Subscribe("example")
+	psc.Subscribe("sopes1")
 	for {
 		switch v := psc.Receive().(type) {
 		case redis.Message:
@@ -33,6 +31,6 @@ func main() {
 			fmt.Println(v)
 		}
 	}
-	/// End here
+	// End here
 
 }

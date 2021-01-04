@@ -2,16 +2,34 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
-	"time"
+	"net/http"
 
 	"github.com/gomodule/redigo/redis"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	//https://godoc.org/github.com/gomodule/redigo/redis#Pool
-	fmt.Println("Hello World")
+	// API
+	router := mux.NewRouter().StrictSlash(true)
 
+	router.HandleFunc("/", indexRoute)
+	router.HandleFunc("/publish", publish).Methods("POST")
+
+	log.Fatal(http.ListenAndServe(":4000", router))
+
+}
+
+func publish(w http.ResponseWriter, r *http.Request) {
+	// Read data
+	reqBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Fprintf(w, "Insert a Valid Data")
+	}
+	dataJSON := string(reqBody)
+	log.Print(dataJSON, "\n\n\n")
+	// Start publish
 	c, err := redis.Dial("tcp", "35.226.134.234:6379")
 	if err != nil {
 		fmt.Println("Error")
@@ -21,20 +39,12 @@ func main() {
 	}
 	// defer c.Close()
 
-	/*
-		Commands:
-		redis-cli
-		PUBLISH example test
-		SUBSCRIBE example
-	*/
+	// Publisher
+	c.Do("PUBLISH", "sopes1", dataJSON)
+	// End here
 
-	/// This is for Publisher
-	c.Do("PUBLISH", "example", "Hola sopes1 "+time.Now().String())
-	c.Do("PUBLISH", "example", "Hola sopes2 "+time.Now().String())
-	c.Do("PUBLISH", "example", "Hola sopes3 "+time.Now().String())
-	c.Do("PUBLISH", "example", "Hola sopes4 "+time.Now().String())
-	/// End here
+}
 
-	/// End here
-
+func indexRoute(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Wecome the my GO API!")
 }
