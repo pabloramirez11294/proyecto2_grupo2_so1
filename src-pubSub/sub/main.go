@@ -29,7 +29,7 @@ func main() {
 	for {
 		switch v := psc.Receive().(type) {
 		case redis.Message:
-			//fmt.Printf("%s: message: %s\n", v.Channel, v.Data)
+			fmt.Printf("%s: message: %s\n", v.Channel, v.Data)
 			fmt.Print("¡¡Data recibida!!")
 			go baseDatos(string(v.Data))
 		case redis.Subscription:
@@ -74,13 +74,13 @@ func baseDatos(text string) {
 		ui = append(ui, t)
 	}
 	database.Collection("infectados").InsertMany(ctx, ui)
-	fmt.Print("Inserted documents into data collection!\n")
-	/*res, err := database.Collection("infectados").InsertMany(ctx, ui)
+	//fmt.Print("Inserted documents into data collection!\n")
+	res, err := database.Collection("infectados").InsertMany(ctx, ui)
 
 	if err != nil {
 
 		log.Print(err)
 	}
-	fmt.Printf("Inserted %v documents into data collection!\n", res)*/
+	fmt.Printf("Inserted %v documents into data collection!\n", res)
 
 }

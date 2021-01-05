@@ -10,7 +10,7 @@ with open('/home/pabloramirez/Documentos/Sopes1/lab/proy2/traffic.json') as json
 
 class User(HttpUser):    
 
-    wait_time = between(1, 15)
+    wait_time = between(5, 10)
 
     @task
     def users(self):
@@ -31,7 +31,7 @@ class User(HttpUser):
         print("\n ***** \n")
 
         # post
-        response = self.client.post("/data", json=aux_json)
+        response = self.client.post("/publish", json=aux_json)
         json_var = response.json()
         request_id = json_var['message']
  
