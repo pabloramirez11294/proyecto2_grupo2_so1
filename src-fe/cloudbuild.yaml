@@ -1,0 +1,13 @@
+steps:
+  # build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us.gcr.io/sopes1-proy2/server-fe:01', '.']
+  # push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us.gcr.io/sopes1-proy2/server-fe:01']
+  # deploy container image to Cloud Run
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'server-fe', '--image', 'us.gcr.io/sopes1-proy2/server-fe:01', '--region', 'us-central1', '--allow-unauthenticated', "--platform=managed"]
+
+images:
+- us.gcr.io/sopes1-proy2/server-fe:01
