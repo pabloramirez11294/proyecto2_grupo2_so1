@@ -31,8 +31,8 @@ class User(HttpUser):
         print("\n ***** \n")
 
         # post
-        response = self.client.post("/publish", json=aux_json)
+        response = self.client.post("/", json=aux_json)
         json_var = response.json()
         request_id = json_var['message']
  
-        #print('Response: ' + request_id)
+        print('Response: ' + request_id)

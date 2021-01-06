@@ -12,9 +12,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+var address = "35.239.45.231:6379"
+var pass = "B9wALZU3a2qYWDozuE1jorMR8ZRSpKb8k+KNkqkDbyAKqDo12ZDwQ+WG/o84Gscq8RqSQgINsFSk/XuV"
+
 func main() {
 
-	c, err := redis.Dial("tcp", "35.226.134.234:6379")
+	c, err := redis.Dial("tcp", address)
 	if err != nil {
 		fmt.Println("Error")
 		log.Println(err)
@@ -22,14 +25,18 @@ func main() {
 		log.Println("Everything is fine!!!")
 	}
 	defer c.Close()
-
+	res, err := c.Do("AUTH", pass)
+	if err != nil {
+		log.Println("Contraseña invalida.")
+	}
+	log.Println(res)
 	// Subscriber
 	psc := redis.PubSubConn{Conn: c}
 	psc.Subscribe("sopes1")
 	for {
 		switch v := psc.Receive().(type) {
 		case redis.Message:
-			fmt.Printf("%s: message: %s\n", v.Channel, v.Data)
+			fmt.Printf("%s: message: %s\n", v.Channel /*, v.Data*/, "recibido")
 			fmt.Print("¡¡Data recibida!!")
 			go baseDatos(string(v.Data))
 		case redis.Subscription:
@@ -73,7 +80,6 @@ func baseDatos(text string) {
 	for _, t := range persons {
 		ui = append(ui, t)
 	}
-	database.Collection("infectados").InsertMany(ctx, ui)
 	//fmt.Print("Inserted documents into data collection!\n")
 	res, err := database.Collection("infectados").InsertMany(ctx, ui)
 

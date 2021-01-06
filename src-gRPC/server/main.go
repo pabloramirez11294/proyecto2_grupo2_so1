@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	port = ":50051"
+	port = ":50050"
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -31,7 +31,7 @@ func (s *server) SendData(ctx context.Context, in *pb.DataRequest) (*pb.DataRepl
 	//base de datos mongo
 	go baseDatos(in.GetData())
 
-	return &pb.DataReply{Message: "Data recibida."}, nil
+	return &pb.DataReply{Message: "Data recibida server grpc."}, nil
 }
 
 func main() {

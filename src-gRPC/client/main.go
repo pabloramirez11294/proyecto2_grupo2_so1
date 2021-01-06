@@ -13,14 +13,22 @@ import (
 	"google.golang.org/grpc"
 )
 
-const address = "localhost:50051"
+var address = "go-server-service"
+
+const port = "50050"
 
 func main() {
+	// Vatiable de entorno
+	/*address := os.Getenv("ADDRESS")
+	if len(address) <= 0 {
+		address = "go-server-service"
+	}*/
+	//fmt.Print("\n Direccion: ", address)
 	// API
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.HandleFunc("/", indexRoute)
-	router.HandleFunc("/data", postData).Methods("POST")
+	router.HandleFunc("/index", indexRoute)
+	router.HandleFunc("/", postData).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":3000", router))
 
@@ -37,7 +45,7 @@ func postData(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintf(w, `{"message" : "Recibido!"}`)
+	fmt.Fprintf(w, `{"message" : "Recibido de client gRPC!"}`)
 }
 
 func indexRoute(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +54,7 @@ func indexRoute(w http.ResponseWriter, r *http.Request) {
 
 func sendData(data string) {
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(address+":"+port, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
