@@ -25,6 +25,7 @@ var auxtop3Cantidad = "0";
 
 var contadorGlobal = 0;
 var datosTabla = [];
+var datosTablaRedis = [];
 
 var myArrayLabel = ["Direct", "Referral", "Social", "Test"];
 var myArrayData = [55, 30, 15, 5];
@@ -34,6 +35,10 @@ var flagUpdate = 0; //0:NO, 1:SI
 $(document).ready(function () {
     $('#table_id').DataTable({
         data: datosTabla
+	});
+	
+	$('#table_id_redis').DataTable({
+        data: datosTablaRedis
     });
 
     const interval = setInterval(function () {
@@ -48,15 +53,7 @@ refreshList.addEventListener('click', function (e) {
     refrescar();
 });
 
-const refreshInfected = document.getElementById('btn-refresh-infected');
-refreshInfected.addEventListener('click', function (e) {
-    socket.emit('obtenerTop');
-});
-
-
-
 function refrescar() {
-    //console.log("[CLIENTE] ----------------------- refrescando");
     socket.emit('refrescar');
 }
 
@@ -76,31 +73,17 @@ socket.on('mensaje1', function (data) {
 
         if(auxtop1nombre != top1nombre || auxtop2nombre != top2nombre || auxtop3nombre != top3nombre
             || auxtop1Cantidad != top1Cantidad || auxtop2Cantidad != top2Cantidad || auxtop3Cantidad != top3Cantidad){
-
                 top1nombre = auxtop1nombre;
                 top1Cantidad = auxtop1Cantidad;
                 top2nombre = auxtop2nombre;
                 top2Cantidad = auxtop2Cantidad;
                 top3nombre = auxtop3nombre;
-                top3Cantidad = auxtop3Cantidad;
-                
-                //console.log("Cambiando: " + auxtop1nombre + " a: " + top1nombre);
-                //console.log("Cambiando: " + auxtop1Cantidad + " a: " + top1Cantidad);
-
-                $('#top1_text').text("1. " + top1nombre);
-                $('#top1_value').text("--------> " + top1Cantidad);
-
-                //console.log("Cambiando: " + auxtop2nombre + " a: " + top2nombre);
-                //console.log("Cambiando: " + auxtop2Cantidad + " a: " + top2Cantidad);
-
-                $('#top2_text').text("2. " + top2nombre);
-                $('#top2_value').text("--------> " + top2Cantidad);
-
-                //console.log("Cambiando: " + auxtop3nombre + " a: " + top3nombre);
-                //console.log("Cambiando: " + auxtop3Cantidad + " a: " + top3Cantidad);
-
-                $('#top3_text').text("3. " + top3nombre);
-                $('#top3_value').text("--------> " + top3Cantidad);
+				top3Cantidad = auxtop3Cantidad;
+				var datatable = $('#table_id_top3_mongo').DataTable();
+				datatable.clear();
+				datatable.row.add([1, top1nombre, top1Cantidad]).draw(false);
+				datatable.row.add([2, top2nombre, top2Cantidad]).draw(false);
+				datatable.row.add([3, top3nombre, top3Cantidad]).draw(false);
         }
 
     }
@@ -134,7 +117,7 @@ socket.on('respuestaTop', function (data) {
         auxtop3nombre = arrayaux [0];
         auxtop3Cantidad = arrayaux [1];
 
-        //console.log(data.arrayTop);
+		//console.log(data.arrayTop);
     }
 });
 
@@ -146,7 +129,6 @@ socket.on('responseGroupAllInfected', function (data) {
         removeDataSet();
         addDataSet(); 
         data.arrayAllGroup.forEach(element => {
-            console.log(element);   
             addData(element[0], element[1]);        
         });
     flagUpdate = 0;   
@@ -267,7 +249,6 @@ function addDataSet(){
 
 		var colorName = colorNames[index % colorNames.length];
         var newColor = window.chartColors[colorName];
-        console.log("newColor: " + newColor);
 		newDataset.backgroundColor.push(newColor);
 	}
 
