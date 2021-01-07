@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: load-client
+    client: redis
+  name: redis-client-deployment
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-client
+      client: redis
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: load-client
+        client: redis
+    spec:
+      containers:
+      - image: 11294/redis-pub:3.0
+        name: redis-client
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: load-client
+    client: go
+  name: go-client-deployment
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-client
+      client: go
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: load-client
+        client: go
+    spec:
+      containers:
+      - image: 11294/go-client:2.0
+        name: go-client
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: go-server    
+  name: go-server-deployment
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-server      
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: go-server        
+    spec:
+      containers:
+      - image: 11294/go-server:2.0
+        name: go-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: redis-sub
+  name: redis-sub-deployment
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-sub
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: redis-sub
+    spec:
+      containers:
+      - image: 11294/redis-sub:3.0
+        name: redis-sub

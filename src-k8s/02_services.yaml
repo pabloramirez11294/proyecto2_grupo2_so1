@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: load-client
+  name: load-service
+  namespace: project
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: load-client
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: load-client
+    client: redis
+  name: redis-client-service
+  namespace: project
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: load-client
+    client: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: load-client
+    client: go
+  name: go-client-service
+  namespace: project
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: load-client
+    client: go
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: go-server    
+  name: go-server-service
+  namespace: project
+spec:
+  ports:
+  - port: 50050
+    protocol: TCP
+    targetPort: 50050
+  selector:
+    app: go-server    
