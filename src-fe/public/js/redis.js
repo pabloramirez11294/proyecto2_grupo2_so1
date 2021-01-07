@@ -41,11 +41,18 @@ function getTop5() {
 	peticionPersona1(url5, 5);
 
 	try {
-		$('#redis1_text').text("1. Name: " + persona1Aux[0].name + " | Location: " + persona1Aux[0].location + " | Age: " + persona1Aux[0].age + " | Infected Type: " + persona1Aux[0].infected_type + " | State: " + persona1Aux[0].state);
-		$('#redis2_text').text("2. Name: " + persona2Aux[0].name + " | Location: " + persona2Aux[0].location + " | Age: " + persona2Aux[0].age + " | Infected Type: " + persona2Aux[0].infected_type + " | State: " + persona2Aux[0].state);
-		$('#redis3_text').text("3. Name: " + persona3Aux[0].name + " | Location: " + persona3Aux[0].location + " | Age: " + persona3Aux[0].age + " | Infected Type: " + persona3Aux[0].infected_type + " | State: " + persona3Aux[0].state);
-		$('#redis4_text').text("4. Name: " + persona4Aux[0].name + " | Location: " + persona4Aux[0].location + " | Age: " + persona4Aux[0].age + " | Infected Type: " + persona4Aux[0].infected_type + " | State: " + persona4Aux[0].state);
-		$('#redis5_text').text("5. Name: " + persona5Aux[0].name + " | Location: " + persona5Aux[0].location + " | Age: " + persona5Aux[0].age + " | Infected Type: " + persona5Aux[0].infected_type + " | State: " + persona5Aux[0].state);
+		var datatable = $('#table_id_redis').DataTable();
+		datatable.clear();
+		//$('#redis1_text').text("1. Name: " + persona1Aux[0].name + " | Location: " + persona1Aux[0].location + " | Age: " + persona1Aux[0].age + " | Infected Type: " + persona1Aux[0].infected_type + " | State: " + persona1Aux[0].state);
+		datatable.row.add([persona1Aux[0].name, persona1Aux[0].location, persona1Aux[0].age, persona1Aux[0].infected_type,persona1Aux[0].state]).draw(false);
+		//$('#redis2_text').text("2. Name: " + persona2Aux[0].name + " | Location: " + persona2Aux[0].location + " | Age: " + persona2Aux[0].age + " | Infected Type: " + persona2Aux[0].infected_type + " | State: " + persona2Aux[0].state);
+		datatable.row.add([persona2Aux[0].name, persona2Aux[0].location, persona2Aux[0].age, persona2Aux[0].infected_type,persona2Aux[0].state]).draw(false);
+		//$('#redis3_text').text("3. Name: " + persona3Aux[0].name + " | Location: " + persona3Aux[0].location + " | Age: " + persona3Aux[0].age + " | Infected Type: " + persona3Aux[0].infected_type + " | State: " + persona3Aux[0].state);
+		datatable.row.add([persona3Aux[0].name, persona3Aux[0].location, persona3Aux[0].age, persona3Aux[0].infected_type,persona3Aux[0].state]).draw(false);
+		//$('#redis4_text').text("4. Name: " + persona4Aux[0].name + " | Location: " + persona4Aux[0].location + " | Age: " + persona4Aux[0].age + " | Infected Type: " + persona4Aux[0].infected_type + " | State: " + persona4Aux[0].state);
+		datatable.row.add([persona4Aux[0].name, persona4Aux[0].location, persona4Aux[0].age, persona4Aux[0].infected_type,persona4Aux[0].state]).draw(false);
+		//$('#redis5_text').text("5. Name: " + persona5Aux[0].name + " | Location: " + persona5Aux[0].location + " | Age: " + persona5Aux[0].age + " | Infected Type: " + persona5Aux[0].infected_type + " | State: " + persona5Aux[0].state);	
+		datatable.row.add([persona5Aux[0].name, persona5Aux[0].location, persona5Aux[0].age, persona5Aux[0].infected_type,persona5Aux[0].state]).draw(false);
 	} catch {
 
 	}
@@ -77,12 +84,9 @@ function getBar() {
 
 	try {
 		removeDataBar();
-		console.log("barra1: " + barra1);
 		addDataBar("0-9", parseInt(barra1));
 		addDataBar("10-19", parseInt(barra2));
-		console.log("barra2: " + barra2);
 		addDataBar("20-29", parseInt(barra3));
-		console.log("barra3: " + barra3);
 		addDataBar("30-39", parseInt(barra4));
 		addDataBar("40-49", parseInt(barra5));
 		addDataBar("50-59", parseInt(barra6));
@@ -98,7 +102,6 @@ function getBar() {
 }
 
 function peticionPersona1(url, numeroPersona) {
-	console.log("Entrando con flag: " + flagCambio);
 	makeRequest('GET', url)
 		.then(function (datums) {
 			//var jsonPersona = JSON.parse(datums);
@@ -135,7 +138,7 @@ function peticionBar(url, numeroPersona) {
 		.then(function (datums) {
 			//var jsonPersona = JSON.parse(datums);
 			var jsonPersona = JSON.parse(datums);
-			console.log(jsonPersona);
+			//console.log(jsonPersona);
 			switch (numeroPersona) {
 				case 1:
 					barra1 = jsonPersona[0].contador;
